@@ -1,3 +1,4 @@
 venv
 settings.json
 *.pyc
+compose-dev.yaml
