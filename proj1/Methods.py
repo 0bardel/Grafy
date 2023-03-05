@@ -2,7 +2,7 @@ from DataTypes import *
 import random
 
 
-def generateCompleteEdgeList(size: int) -> list[tuple[int, int]]:
+def generate_complete_edge_list(size: int) -> list[tuple[int, int]]:
     """Generates list of tuples representing all possible edges of a simple graph.
     No loops are generated.
 
@@ -17,7 +17,7 @@ def generateCompleteEdgeList(size: int) -> list[tuple[int, int]]:
     )  # I'm sorry.
 
 
-def randomGraphByEdges(size: int, edges: int) -> GraphData:
+def random_graph_by_edges(size: int, edges: int) -> AdjacencyList:
     """Generates random undirected graph with specific number of edges.
 
     Args:
@@ -27,16 +27,16 @@ def randomGraphByEdges(size: int, edges: int) -> GraphData:
     Returns:
         GraphData: Object in AdjacencyList format.
     """
-    data = [[] for _ in range(size)]  # Initialize empty Adjancency List
+    data = [[] for _ in range(size)]  # Initialize empty Adjacency List
 
-    for n1, n2 in sorted(random.sample(generateCompleteEdgeList(size), edges)):
+    for n1, n2 in sorted(random.sample(generate_complete_edge_list(size), edges)):
         data[n1].append(n2)
         data[n2].append(n1)
 
     return AdjacencyList(size, data, edges)
 
 
-def randomGraphByChance(size: int, probability: float) -> GraphData:
+def random_graph_by_chance(size: int, probability: float) -> AdjacencyList:
     """Generates random undirected graph with specified probability for any edge to appear.
 
     Args:
@@ -46,10 +46,10 @@ def randomGraphByChance(size: int, probability: float) -> GraphData:
     Returns:
         GraphData: Object in AdjacencyList format.
     """
-    data = [[] for _ in range(size)]  # Initialize empty Adjancency List
+    data = [[] for _ in range(size)]  # Initialize empty Adjacency List
     edges = 0
 
-    for n1, n2 in generateCompleteEdgeList(size):
+    for n1, n2 in generate_complete_edge_list(size):
         if random.random() <= probability:
             edges += 1
             data[n1].append(n2)

@@ -3,13 +3,13 @@ from Methods import *
 
 if __name__ == "__main__":
 
-    graphAL = randomGraphByEdges(10, 12)
-    graphAM = AL_to_AM(graphAL)
-    graphIM = AM_to_IM(graphAM)
+    graphAL = random_graph_by_edges(10, 12)
+    graphAM = graphAL.to_adjacency_matrix()
+    graphIM = graphAL.to_incidence_matrix()
     print(graphAL)  # default
     print(graphAM)  # AL - AM
     print(graphIM)  # AM - IM
-    print(IM_to_AM(graphIM))  # IM - AM
-    print(AM_to_AL(graphAM))  # AM - AL
-    print(IM_to_AL(graphIM))  # IM - AL
-    print(IM_to_AL(AL_to_IM(graphAL)))  # AL - IM
+    print(graphIM.to_adjacency_matrix())  # IM - AM
+    print(graphAM.to_adjacency_list())  # AM - AL
+    print(graphIM.to_adjacency_list())  # IM - AL
+    print(graphAL.to_incidence_matrix().to_adjacency_matrix())  # AL - IM - AL

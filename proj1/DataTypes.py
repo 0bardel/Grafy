@@ -1,5 +1,4 @@
 from typing import Union
-import igraph
 from enum import Enum, auto
 
 
@@ -32,6 +31,14 @@ class GraphData:
         return str(self.data)
 
 
+class AdjacencyMatrix(GraphData):
+    pass
+class AdjacencyList(GraphData):
+    pass
+class IncidenceMatrix(GraphData):
+    pass
+
+
 class AdjacencyList(GraphData):
     t: FormatType = FormatType.AdjacencyList
 
@@ -48,6 +55,22 @@ class AdjacencyList(GraphData):
         for index, neighbors in enumerate(self.data):
             res += f"{index}: {neighbors}\n"
         return res
+
+    def to_adjacency_matrix(self) -> AdjacencyMatrix:
+        new_data = [[0 for _ in range(self.size)] for _ in range(self.size)]
+        for n1, row in enumerate(self.data):
+            for n2 in row:
+                new_data[n1][n2] = 1
+        return AdjacencyMatrix(self.size, new_data, self.edges)
+
+    def to_incidence_matrix(self) -> IncidenceMatrix:
+        new_data = [[] for _ in range(self.size)]
+        for n1, neighbors in enumerate(self.data):
+            for n2 in neighbors:
+                if n1 < n2:
+                    for id, row in enumerate(new_data):
+                        row.append(1 if id in (n1, n2) else 0)
+        return IncidenceMatrix(self.size, new_data, self.edges)
 
 
 class AdjacencyMatrix(GraphData):
@@ -67,6 +90,27 @@ class AdjacencyMatrix(GraphData):
             res += f"{neighbors}\n"
         return res
 
+    def to_adjacency_list(self) -> AdjacencyList:
+        new_data = [[] for _ in range(self.size)]  # Initialize empty Adjacency List
+        for n1, row in enumerate(self.data):
+            for n2, value in enumerate(row):
+                if value:
+                    new_data[n1].append(n2)
+        return AdjacencyList(self.size, new_data, self.edges)
+
+    def to_incidence_matrix(self) -> IncidenceMatrix:
+        new_data = [[0 for _ in range(self.edges)] for _ in range(self.size)]
+        edges = 0
+        for n1, row in enumerate(self.data):
+            for n2, val in enumerate(row):
+                if n1 > n2 and val:
+                    new_data[n1][edges] = 1
+                    new_data[n2][edges] = 1
+                    edges += 1
+        if edges != self.edges:
+            raise ValueError("Coś się zepsuło")
+        return IncidenceMatrix(self.size, new_data, self.edges)
+
 
 class IncidenceMatrix(GraphData):
     t: FormatType = FormatType.IncidenceMatrix
@@ -85,73 +129,24 @@ class IncidenceMatrix(GraphData):
             res += f"{neighbors}\n"
         return res
 
+    def to_adjacency_matrix(self) -> AdjacencyMatrix:
+        new_data = [[0 for _ in range(self.size)] for _ in range(self.size)]
+        for edge in zip(*self.data):
+            nodes = []
+            for n, val in enumerate(edge):
+                if val:
+                    nodes.append(n)
+            new_data[nodes[0]][nodes[1]] = 1
+            new_data[nodes[1]][nodes[0]] = 1
+        return AdjacencyMatrix(self.size, new_data, self.edges)
 
-# TODO: Refactor names, maybe reorganize.
-
-
-def AL_to_AM(al: AdjacencyList) -> AdjacencyMatrix:
-    newData = [[0 for _ in range(al.size)] for _ in range(al.size)]
-    for n1, row in enumerate(al.data):
-        for n2 in row:
-            newData[n1][n2] = 1
-    return AdjacencyMatrix(al.size, newData, al.edges)
-
-
-def AM_to_AL(am: AdjacencyMatrix) -> AdjacencyList:
-    newData = [[] for _ in range(am.size)]  # Initialize empty Adjancency List
-    for n1, row in enumerate(am.data):
-        for n2, value in enumerate(row):
-            if value:
-                newData[n1].append(n2)
-    return AdjacencyList(am.size, newData, am.edges)
-
-
-def AM_to_IM(am: AdjacencyMatrix) -> IncidenceMatrix:
-    newData = [[0 for _ in range(am.edges)] for _ in range(am.size)]
-    edges = 0
-    for n1, row in enumerate(am.data):
-        for n2, val in enumerate(row):
-            if n1 > n2 and val:
-                newData[n1][edges] = 1
-                newData[n2][edges] = 1
-                edges += 1
-    if edges != am.edges:
-        raise ValueError("Coś się zepsuło")
-    return IncidenceMatrix(am.size, newData, am.edges)
-
-
-def IM_to_AM(im: IncidenceMatrix) -> AdjacencyMatrix:
-    newData = [[0 for _ in range(im.size)] for _ in range(im.size)]
-    for edge in zip(*im.data):
-        nodes = []
-        for n, val in enumerate(edge):
-            if val:
-                nodes.append(n)
-        newData[nodes[0]][nodes[1]] = 1
-        newData[nodes[1]][nodes[0]] = 1
-
-    return AdjacencyMatrix(im.size, newData, im.edges)
-
-
-def IM_to_AL(im: IncidenceMatrix) -> AdjacencyList:
-    newData = [[] for _ in range(im.size)]
-    for edge in zip(*im.data):
-        nodes = []
-        for n, val in enumerate(edge):
-            if val:
-                nodes.append(n)
-        newData[nodes[0]].append(nodes[1])
-        newData[nodes[1]].append(nodes[0])
-
-    return AdjacencyList(im.size, newData, im.edges)
-
-
-def AL_to_IM(al: AdjacencyList) -> IncidenceMatrix:
-    newData = [[] for _ in range(al.size)]
-    for n1, neighbors in enumerate(al.data):
-        for n2 in neighbors:
-            if n1 < n2:
-                for id, row in enumerate(newData):
-                    row.append(1 if id in (n1, n2) else 0)
-
-    return AdjacencyList(al.size, newData, al.edges)
+    def to_adjacency_list(self) -> AdjacencyList:
+        new_data = [[] for _ in range(self.size)]
+        for edge in zip(*self.data):
+            nodes = []
+            for n, val in enumerate(edge):
+                if val:
+                    nodes.append(n)
+            new_data[nodes[0]].append(nodes[1])
+            new_data[nodes[1]].append(nodes[0])
+        return AdjacencyList(self.size, new_data, self.edges)
