@@ -5,6 +5,14 @@ import numpy as np
 
 
 def isSequenceGraphic(seq: List[int]) -> bool:
+    """Asserts whether given sequence is graphic.
+
+    Args:
+        seq (List[int]): Tested sequence. The list is passed by reference and WILL get modified
+
+    Returns:
+        bool: Assertion result
+    """
 
     seq.sort(reverse=True)
 
@@ -25,12 +33,23 @@ def isSequenceGraphic(seq: List[int]) -> bool:
 
 
 def graphFromSequence(seq: List[int]) -> Graph:
+    """Builds a graph from provided graphic sequence.
 
+    Args:
+        seq (List[int]): Provided sequence.
+
+    Returns:
+        Graph: Built igraph object.
+    """
     if not isSequenceGraphic(seq.copy()):
         raise ValueError("Non-graphic sequence was given.")
 
-    vertexList = [[i, deg] for i, deg in enumerate(seq)]
+    vertexList = [
+        [i, deg] for i, deg in enumerate(seq)
+    ]  # list of modifiable index-degree pairs
     edgeList = []
+    
+    vertexList.sort(key=lambda x: x[1], reverse=True)
 
     while any(v[1] for v in vertexList):
         first = vertexList[0]
