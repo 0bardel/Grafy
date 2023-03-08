@@ -18,3 +18,5 @@ https://docs.google.com/document/d/1jTSSxTxERUc5G63uMR99I3LYdgY82Wl2X28DValzO7g/
   Instalacja modułów:
   ```python -m pip install -r requirements.txt```
   
+  Dodanie modułów z Global do ścieżki:
+  ```python -m pip install -e . ``` (wywołane w folderze root)
