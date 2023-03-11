@@ -1,1 +1,5 @@
+numpy==1.24.2
 python_igraph==0.10.4
+setuptools==65.5.0
+networkx==3.0
+matplotlib==3.7.1

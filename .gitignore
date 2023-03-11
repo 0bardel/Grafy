@@ -3,3 +3,4 @@ settings.json
 *.pyc
 compose-dev.yaml
 .idea
+*.egg-info

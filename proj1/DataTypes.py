@@ -13,6 +13,7 @@ class GraphData:
     size: int
     data: list[list[int]]
     edges: Union[int, None]
+    t: FormatType
 
     def __init__(
         self,
