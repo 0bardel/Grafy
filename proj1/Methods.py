@@ -56,3 +56,5 @@ def random_graph_by_chance(size: int, probability: float) -> AdjacencyList:
             data[n2].append(n1)
 
     return AdjacencyList(size, data, edges)
+
+
