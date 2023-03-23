@@ -1,5 +1,6 @@
 from igraph import Graph
 import random
+import networkx as nx
 
 
 def generateCompleteEdgeList(size: int) -> list[tuple[int, int]]:
@@ -44,3 +45,33 @@ def randomGraphByChance(size: int, probability: float) -> Graph:
         [e for e in generateCompleteEdgeList(size) if random.random() <= probability]
     )
     return Graph(size, edgeList)
+
+
+
+def randomize_graph(graph: nx.Graph|Graph) -> nx.Graph:
+    """
+    Randomizes graph by removing random edge and connecting one of the vertices to random vertex.
+    
+    Args:
+        graph (nx.Graph|Graph): Graph to randomize.
+            
+    Returns:
+        nx.Graph: Randomized graph.
+    """
+    if isinstance(graph, Graph):
+        graph = graph.to_networkx()
+
+    try:
+        edge_list = graph.edges()
+        edge = random.choice(list(edge_list))
+        graph.neighbors
+        # mamy wiezrcholek z listy wierzcholkow bez wiierzcholkow polaczonych z pierwszym wierzvczolkiem wybranej krawedzi (nie moga byc polaczone)
+        new_v = random.choice(list(set(graph.nodes()).difference(set([edge[0], *[n for n in graph.neighbors(edge[0])]]))))
+        graph.remove_edge(*edge)
+        graph.add_edge(edge[0], new_v)
+        if graph:
+            return graph
+        else:
+            return randomize_graph(graph)
+    except:
+        return randomize_graph(graph)
