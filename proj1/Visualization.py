@@ -1,7 +1,15 @@
 import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
-from DataTypes import AdjacencyList, AdjacencyMatrix, IncidenceMatrix, GraphData, FormatType
+from .DataTypes import (
+    AdjacencyList,
+    AdjacencyMatrix,
+    IncidenceMatrix,
+    GraphData,
+    FormatType,
+)
+
+
 def draw_graph(graph: GraphData, filename: str = None) -> None:
     if graph.t == FormatType.AdjacencyList or graph.t == FormatType.IncidenceMatrix:
         graph = graph.to_adjacency_matrix()

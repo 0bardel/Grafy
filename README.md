@@ -21,4 +21,6 @@ https://docs.google.com/document/d/1jTSSxTxERUc5G63uMR99I3LYdgY82Wl2X28DValzO7g/
   Dodanie modułów z Global do ścieżki:
   ```python -m pip install -e . ``` (wywołane w folderze root)
 
-  TODO: Wywoływanie zadań poprzez np. ``` python -m proj1.z1 ```
+Po dodaniu naszego projektu jako modułu, możemy uruchomić skrypty za pomocą np. ```python -m proj1.z1.py```
+
+

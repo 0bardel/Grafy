@@ -1,5 +1,5 @@
-from DataTypes import *
-from RandomGraphs import *
+from .DataTypes import *
+from .RandomGraphs import *
 
 if __name__ == "__main__":
 

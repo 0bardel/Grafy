@@ -1,4 +1,4 @@
-from DataTypes import *
+from .DataTypes import *
 import random
 
 
