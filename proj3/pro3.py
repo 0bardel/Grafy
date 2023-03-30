@@ -10,10 +10,14 @@ def random_graph_weights(size: int, edges:int, min_weight : int =1, max_weight :
     # step 2: assign random weights to edges
     for i in range(len(graph.data)):
         for j, val in enumerate(range(len(graph.data[i]))):
-            if j < i and val != 0:
-                curr = random.randint(min_weight,max_weight)
-                graph.data[i][j] = curr
-                graph.data[j][i] = curr
+            if j < i:
+                if val != 0:
+                    curr = random.randint(min_weight,max_weight)
+                    graph.data[i][j] = curr
+                    graph.data[j][i] = curr
+                else:
+                    graph.data[i][j] = None
+                    graph.data[j][i] = None                   
                 
     return graph
     
