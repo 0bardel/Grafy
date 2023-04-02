@@ -17,7 +17,6 @@ def components(graph):
             if u not in visited:
                 components_rec(graph, u, visited, comp)
 
-
     visited = set()
     all_comps = []
     for node in graph.nodes():
