@@ -9,25 +9,23 @@ def draw_graph(graph: ig.Graph):
     nx.draw(graph, pos=pos, with_labels=True)
 
 
+def components_rec(graph, node, visited, comp):
+        visited.add(node)
+        comp.append(node)
+        for u in graph.neighbors(node):
+            if u not in visited:
+                components_rec(graph, u, visited, comp)
+
+
 def components(graph):
-
-    def components_rec(adj_list, comp, nr, v):
-        for u in adj_list[v]:
-            if comp[u][0] == -1:
-                comp[u].append(nr)
-                components_rec(adj_list, comp, nr, u)
-        return comp
-
-    adj_list = dict(graph.adjacency())
-    comp = [[-1] for _ in range(len(adj_list))]
-    nr = 0
-    for v in range(len(comp)):
-        if comp[v][0] == -1:
-            comp[v].remove(-1)
-            # comp[v].append(nr)
-            comp = components_rec(adj_list, comp, nr, v)
-            nr += 1
-    return comp
+    visited = set()
+    all_comps = []
+    for node in graph.nodes():
+        if node not in visited:
+            comp = []
+            components_rec(graph, node, visited, comp)
+            all_comps.append(comp)
+    return max(all_comps, key=len)
 
 
 if __name__ == "__main__":
@@ -38,6 +36,4 @@ if __name__ == "__main__":
     plt.clf()
     comp = components(graph)
     print(comp)
-    adj_list = dict(graph.adjacency())
-    for node, neighbours in adj_list.items():
-        print(node, ':', list(neighbours))
+
