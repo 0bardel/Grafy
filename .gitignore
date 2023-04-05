@@ -4,3 +4,4 @@ settings.json
 compose-dev.yaml
 .idea
 *.egg-info
+*.png
