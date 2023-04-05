@@ -9,7 +9,7 @@ def draw_graph(graph: ig.Graph):
     nx.draw(graph, pos=pos, with_labels=True)
 
 
-def components(graph):  
+def components(graph):
     def components_rec(graph, node, visited, comp):
         visited.add(node)
         comp.append(node)
@@ -27,12 +27,17 @@ def components(graph):
     return max(all_comps, key=len)
 
 
-if __name__ == "__main__":
-
-    graph = rg.randomGraphByEdges(10, 5).to_networkx()
-    draw_graph(graph)
-    plt.savefig("z3.png")
-    plt.clf()
+def isHamilton(graph):
     comp = components(graph)
-    print(comp)
+    if len(comp) == graph.__len__():
+        return True
+    else:
+        return False
 
+
+if __name__ == "__main__":
+    graph = rg.randomGraphByEdges(5, 4).to_networkx()
+    draw_graph(graph)
+    plt.savefig("z6.png")
+    plt.clf()
+    print(isHamilton(graph))
