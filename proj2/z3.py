@@ -9,7 +9,7 @@ def draw_graph(graph: ig.Graph):
     nx.draw(graph, pos=pos, with_labels=True)
 
 
-def components(graph):  
+def components(graph, show_all=False):  
     def components_rec(graph, node, visited, comp):
         visited.add(node)
         comp.append(node)
@@ -24,15 +24,17 @@ def components(graph):
             comp = []
             components_rec(graph, node, visited, comp)
             all_comps.append(comp)
+    if show_all:
+        return all_comps
     return max(all_comps, key=len)
 
 
 if __name__ == "__main__":
 
-    graph = rg.randomGraphByEdges(10, 5).to_networkx()
+    graph = rg.randomGraphByEdges(13, 12).to_networkx()
     draw_graph(graph)
     plt.savefig("z3.png")
     plt.clf()
-    comp = components(graph)
+    comp = components(graph, False)
     print(comp)
 
