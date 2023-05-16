@@ -67,12 +67,13 @@ def randomize_graph(graph: nx.Graph | Graph) -> nx.Graph:
     edge2 = random.choice(list(edge_list))
     if len(set([edge1[0], edge1[1], edge2[0], edge2[1]])) != 4:
         return randomize_graph(graph)
-    graph.remove_edge(*edge1)
-    graph.remove_edge(*edge2)
 
     # check if edge already exists
     if graph.has_edge(edge1[0], edge2[1]) or graph.has_edge(edge2[0], edge1[1]):
         return randomize_graph(graph)
+
+    graph.remove_edge(*edge1)
+    graph.remove_edge(*edge2)
 
     graph.add_edge(edge1[0], edge2[1])
     graph.add_edge(edge2[0], edge1[1])
