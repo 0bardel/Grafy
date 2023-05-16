@@ -42,36 +42,40 @@ def randomGraphByChance(size: int, probability: float) -> Graph:
         GraphData: Object in AdjacencyList format.
     """
     edgeList = list(
-        [e for e in generateCompleteEdgeList(size) if random.random() <= probability]
+        [e for e in generateCompleteEdgeList(
+            size) if random.random() <= probability]
     )
     return Graph(size, edgeList)
 
 
-
-def randomize_graph(graph: nx.Graph|Graph) -> nx.Graph:
+def randomize_graph(graph: nx.Graph | Graph) -> nx.Graph:
     """
     Randomizes graph by removing random edge and connecting one of the vertices to random vertex.
-    
+
     Args:
         graph (nx.Graph|Graph): Graph to randomize.
-            
+
     Returns:
         nx.Graph: Randomized graph.
     """
     if isinstance(graph, Graph):
         graph = graph.to_networkx()
 
-    try:
-        edge_list = graph.edges()
-        edge = random.choice(list(edge_list))
-        graph.neighbors
-        # mamy wiezrcholek z listy wierzcholkow bez wiierzcholkow polaczonych z pierwszym wierzvczolkiem wybranej krawedzi (nie moga byc polaczone)
-        new_v = random.choice(list(set(graph.nodes()).difference(set([edge[0], *[n for n in graph.neighbors(edge[0])]]))))
-        graph.remove_edge(*edge)
-        graph.add_edge(edge[0], new_v)
-        if graph:
-            return graph
-        else:
-            return randomize_graph(graph)
-    except:
+
+    edge_list = graph.edges()
+    edge1 = random.choice(list(edge_list))
+    edge2 = random.choice(list(edge_list))
+    if len(set([edge1[0], edge1[1], edge2[0], edge2[1]])) != 4:
         return randomize_graph(graph)
+    graph.remove_edge(*edge1)
+    graph.remove_edge(*edge2)
+
+    # check if edge already exists
+    if graph.has_edge(edge1[0], edge2[1]) or graph.has_edge(edge2[0], edge1[1]):
+        return randomize_graph(graph)
+
+    graph.add_edge(edge1[0], edge2[1])
+    graph.add_edge(edge2[0], edge1[1])
+
+    return graph
+    
