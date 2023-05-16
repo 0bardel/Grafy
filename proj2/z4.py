@@ -8,7 +8,7 @@ n = random.randint(5,6)
 
 sequence = [0,2]
 while (not isSequenceGraphic(sequence.copy())) or len(components(graphFromSequence(sequence).to_networkx(),True)) != 1 :
-    sequence = [random.randint(1,(n-1)//2)*2 + 1 for _ in range(n)]
+    sequence = [random.randint(1,(n-1)//2)*2 for _ in range(n)]
 
 print(sequence)
 graph = graphFromSequence(sequence)
