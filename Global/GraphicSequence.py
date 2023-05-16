@@ -19,7 +19,7 @@ def isSequenceGraphic(seq: List[int]) -> bool:
     while any(seq):
         first = seq[0]
 
-        if first > len(seq) or any(val < 0 for val in seq):
+        if first >= len(seq) or any((val < 0) for val in seq):
             return False
 
         for i in range(1, first):
@@ -48,18 +48,17 @@ def graphFromSequence(seq: List[int]) -> Graph:
         [i, deg] for i, deg in enumerate(seq)
     ]  # list of modifiable index-degree pairs
     edgeList = []
-    
+
     vertexList.sort(key=lambda x: x[1], reverse=True)
 
     while any(v[1] for v in vertexList):
         first = vertexList[0]
 
-        for i in range(1, first[1]):
-            vertexList[i][1] -= 1
-            edgeList.append((first[0], vertexList[i][0]))
+        for i in range(0, first[1]):
+            vertexList[i + 1][1] -= 1
+            edgeList.append((first[0], vertexList[i + 1][0]))
 
         first[1] = 0
 
         vertexList.sort(key=lambda x: x[1], reverse=True)
-
     return Graph(len(seq), edgeList)
