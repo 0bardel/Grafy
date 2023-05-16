@@ -30,10 +30,10 @@ def components(graph, show_all=False):
 
 if __name__ == "__main__":
 
-    graph = rg.randomGraphByEdges(10, 5).to_networkx()
+    graph = rg.randomGraphByEdges(13, 12).to_networkx()
     draw_graph(graph)
     plt.savefig("z3.png")
     plt.clf()
-    comp = components(graph)
+    comp = components(graph, False)
     print(comp)
 
