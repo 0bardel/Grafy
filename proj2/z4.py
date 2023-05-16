@@ -18,16 +18,12 @@ print(graph)
 
 euler = [0]
 while np.sum(graph)>0:
-    #print(graph)
-    #print(euler)
-    #input()
     curr = euler[-1]
     for i,option in enumerate(graph[curr]):
         if option != 0:
             test_graph = graph.copy()
             test_graph[i][curr] = 0
             test_graph[curr][i] = 0
-            #print(test_graph)
             if (len([x for x in components(networkx.Graph(test_graph),True) if len(x)>1]) == 1 and np.sum(test_graph[i])>0) or np.sum(test_graph)<1e-6:
                 euler.append(i)
                 graph[i][curr] = 0
