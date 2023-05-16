@@ -35,5 +35,3 @@ while np.sum(graph)>0:
                 break
                 
 print(euler)
-
-            
