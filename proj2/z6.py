@@ -1,4 +1,5 @@
 import igraph as ig
+import Global.GraphicSequence
 import Global.RandomGraphs as rg
 from matplotlib import pyplot as plt
 import networkx as nx
@@ -29,6 +30,7 @@ def components(graph):
 
 def isHamilton(graph):
     comp = components(graph)
+    print(comp)
     if len(comp) == graph.__len__():
         return True
     else:
@@ -36,7 +38,7 @@ def isHamilton(graph):
 
 
 if __name__ == "__main__":
-    graph = rg.randomGraphByEdges(5, 4).to_networkx()
+    graph = Global.GraphicSequence.graphFromSequence([6,6,6,4,4,2,2,2]).to_networkx()
     draw_graph(graph)
     plt.savefig("z6.png")
     plt.clf()

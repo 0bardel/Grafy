@@ -6,7 +6,7 @@ import igraph
 
 def main():
     n = 10
-    k = 2
+    k = 9
     random_count = 100
 
     if k >= n or (k%2==1 and n%2==1):

@@ -2,6 +2,7 @@ import igraph as ig
 from matplotlib import pyplot as plt
 import Global.RandomGraphs as rg
 import networkx as nx
+import Global.GraphicSequence
 
 
 def draw_graph(graph: ig.Graph):
@@ -11,7 +12,7 @@ def draw_graph(graph: ig.Graph):
 
 if __name__ == "__main__":
 
-    graph = rg.randomGraphByEdges(10, 5).to_networkx()
+    graph = Global.GraphicSequence.graphFromSequence([6,6,6,4,4,2,2,2]).to_networkx()
     draw_graph(graph)
     plt.savefig("z2.png")
     plt.clf()

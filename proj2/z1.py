@@ -12,7 +12,7 @@ def draw_graph(graph: ig.Graph):
 
 
 if __name__ == "__main__":
-    sequence1 = [6, 4, 2, 2, 2, 1, 1]
+    sequence1 = [2]*7
     sequence2 = [6, 2, 5, 6, 1, 3]
     sequence3 = [4, 0, 0, 0, 0]
 
@@ -20,7 +20,7 @@ if __name__ == "__main__":
     print(f"{sequence2} -> {isSequenceGraphic(sequence2)}")
     print(f"{sequence3} -> {isSequenceGraphic(sequence3)}")
 
-    graph = graphFromSequence([6, 4, 2, 2, 2, 1, 1])
+    graph = graphFromSequence([2,2,2,2,2,2,3])
 
     draw_graph(graph.to_networkx())
     plt.savefig("z1.png")
