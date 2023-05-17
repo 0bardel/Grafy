@@ -22,7 +22,7 @@ def isSequenceGraphic(seq: List[int]) -> bool:
         if first >= len(seq) or any((val < 0) for val in seq):
             return False
 
-        for i in range(1, first):
+        for i in range(1, first+1):
             seq[i] -= 1
         seq[0] = 0
 
