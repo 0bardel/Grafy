@@ -15,7 +15,7 @@ def main():
     sequence = [k] * n
     print(sequence)
     graph = graphFromSequence(sequence)
-    print(graph.get_adjacency())
+    #print(graph.get_adjacency())
 
     for _ in range(random_count):
         graph = randomize_graph(graph)
