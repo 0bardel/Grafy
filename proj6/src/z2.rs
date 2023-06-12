@@ -1,8 +1,9 @@
 use rand::prelude::*;
+use std::cmp::{max, min};
 use std::fs::File;
 use std::io::prelude::*;
 
-pub const MAX_ITER: usize = 100000;
+pub const MAX_ITER: usize = 10000;
 pub const TSTART: f64 = 0.001;
 
 pub type Point = (i32, i32);
@@ -24,48 +25,38 @@ fn get_starting_cycle(points: &Cycle) -> Cycle {
     cycle
 }
 
-// fn change_points(cycle: &Cycle) -> Cycle {
-//     // let mut new_cycle = P.clone();
-//     let mut rng = rand::thread_rng();
-
-//     let i = rng.gen_range(0..(cycle.len() as usize - 1));
-//     let j = rng.gen_range(0..(cycle.len() as usize - 1));
-
-//     let a = min(i, j);
-//     let b = a + 1;
-//     let c = max(i, j);
-//     let d = c + 1;
-
-//     if a == c || a == d || b == c {
-//         return change_points(&cycle);
-//     }
-
-//     let mut new_cycle = vec![(0, 0); cycle.len() as usize];
-//     for k in 0..=a {
-//         new_cycle[k] = cycle[k];
-//     }
-//     for k in (b..=c).rev() {
-//         new_cycle[k] = cycle[k];
-//     }
-//     for k in d..(cycle.len() as usize) {
-//         new_cycle[k] = cycle[k];
-//     }
-//     new_cycle
-// }
-
 fn change_points(cycle: &Cycle) -> Cycle {
+    // let mut new_cycle = P.clone();
     let mut rng = rand::thread_rng();
 
-    let i = rng.gen_range(0..(cycle.len() as usize));
-    let j = rng.gen_range(0..(cycle.len() as usize));
+    let i = rng.gen_range(0..(cycle.len() as usize - 1));
+    let j = rng.gen_range(0..(cycle.len() as usize - 1));
 
-    if i == j {
+    let a = min(i, j);
+    let b = a + 1;
+    let c = max(i, j);
+    let d = c + 1;
+
+    if a == c || a == d || b == c {
         return change_points(&cycle);
     }
 
-    let mut new_cycle = cycle.clone();
-    new_cycle.swap(i, j);
-    new_cycle as Cycle
+    let mut i = 0;
+    let mut new_cycle = vec![(0, 0); cycle.len() as usize];
+
+    for k in 0..=a {
+        new_cycle[i] = cycle[k];
+        i += 1;
+    }
+    for k in (b..=c).rev() {
+        new_cycle[i] = cycle[k];
+        i += 1;
+    }
+    for k in d..(cycle.len() - 1 as usize) {
+        new_cycle[i] = cycle[k];
+        i += 1;
+    }
+    new_cycle
 }
 
 fn get_cycle_length(cycle: &Cycle) -> f64 {
@@ -99,12 +90,13 @@ pub fn simulated_annealing(points: Cycle) -> Cycle {
             }
         }
     }
-    print!("{}\n", get_cycle_length(&cycle)); // 2059.178276644806
+    print!("{}\n", get_cycle_length(&cycle)); // 1875.8931705675216
     cycle
 }
 
 pub fn get_data() -> Cycle {
-    let mut f = File::open("input_150.dat").expect("File not found");
+    // let mut f = File::open("input_150.dat").expect("File not found");
+    let mut f = File::open("z2.txt").expect("File not found");
     let mut contents = String::new();
     f.read_to_string(&mut contents)
         .expect("Something went wrong reading the file");

@@ -2,6 +2,7 @@ import numpy as np
 import random
 import math
 
+
 def page_rank_random(digraph: dict, d=0.15, max_iterations=1000):
     n = len(digraph)
     vertices = [0 for _ in range(n)]
@@ -14,7 +15,7 @@ def page_rank_random(digraph: dict, d=0.15, max_iterations=1000):
         else:
             vertex = random.choice(digraph[vertex])
         vertices[vertex] += 1
-        
+
     vertices = [p/max_iterations for p in vertices]
     return vertices
 
@@ -27,21 +28,25 @@ def page_rank_iter(digraph, d=0.15, max_iterations=1000, convergence_threshold=0
     for node, neighbors in digraph.items():
         if neighbors:
             for neighbor in neighbors:
-                adjacency_matrix_probability[neighbor][node] = 1 / len(neighbors)
+                adjacency_matrix_probability[neighbor][node] = 1 / \
+                    len(neighbors)
 
     pagerank_vector = np.full(n, 1 / n)
     teleportation_vector = np.full(n, 1 / n)
 
-    for _ in range(max_iterations):
+    for it in range(max_iterations):
         prev_pagerank_vector = pagerank_vector.copy()
 
         for node in range(n):
-            pagerank_vector[node] = (1 - d) * np.dot(adjacency_matrix_probability[node], prev_pagerank_vector) + d * np.dot(teleportation_vector, prev_pagerank_vector)
+            pagerank_vector[node] = (1 - d) * np.dot(adjacency_matrix_probability[node],
+                                                     prev_pagerank_vector) + d * np.dot(teleportation_vector, prev_pagerank_vector)
 
         if math.sqrt(np.sum(np.square(pagerank_vector - prev_pagerank_vector))) < convergence_threshold:
+            print(f'Converged after {it} iterations')
             break
 
     return pagerank_vector
+
 
 # Przykładowe dane wejściowe w postaci listy sąsiedztwa
 digraph_input = {
@@ -82,7 +87,8 @@ alfabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l']
 page_rank = page_rank_random(digraph=digraph_input, max_iterations=1000000)
 
 # Sortowanie stron internetowych według wartości PageRank
-sorted_pages = sorted(range(len(page_rank)), key=lambda k: page_rank[k], reverse=True)
+sorted_pages = sorted(range(len(page_rank)),
+                      key=lambda k: page_rank[k], reverse=True)
 
 # Wyświetlenie rankingów stron internetowych wraz z wartościami PageRank
 for rank, page in enumerate(sorted_pages):
@@ -95,7 +101,8 @@ print("------")
 page_rank = page_rank_iter(digraph=digraph_input, max_iterations=1000000)
 
 # Sortowanie stron internetowych według wartości PageRank
-sorted_pages = sorted(range(len(page_rank)), key=lambda k: page_rank[k], reverse=True)
+sorted_pages = sorted(range(len(page_rank)),
+                      key=lambda k: page_rank[k], reverse=True)
 
 # Wyświetlenie rankingów stron internetowych wraz z wartościami PageRank
 for rank, page in enumerate(sorted_pages):
