@@ -4,3 +4,7 @@ settings.json
 compose-dev.yaml
 .idea
 *.egg-info
+
+# Added by cargo
+
+/proj6/target
