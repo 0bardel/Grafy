@@ -1,12 +1,20 @@
 import proj1.DataTypes
 import proj1.RandomGraphs as rg
+import proj2.z3 as cmp
 import random
+import networkx
+import numpy as np
+import copy
 
-# TODO: SPRAWDZ CZY GRAF JEST SPOJNY
 def random_graph_weights(size: int, edges:int, min_weight : int =1, max_weight : int =10 ):
     
     # step 1: generate random graph without weights
-    graph = rg.random_graph_by_edges(size,edges).to_adjacency_matrix()
+    components_count = 0
+    while(components_count != 1):
+        graph = rg.random_graph_by_edges(size,edges).to_adjacency_matrix()
+        nx = networkx.Graph(np.array(graph.data))
+        components_count = len(cmp.components(nx,True)) 
+    
     
     # step 2: assign random weights to edges
     for i in range(len(graph.data)):
@@ -23,7 +31,7 @@ def random_graph_weights(size: int, edges:int, min_weight : int =1, max_weight :
                 
     return graph
     
-def dijkstra(graph, start: int = 0):
+def dijkstra(graph, start: int = 0, verbose: bool = True):
 
     d = {}
     p = {}
@@ -51,6 +59,9 @@ def dijkstra(graph, start: int = 0):
 
 
     # print results
+    if not verbose:
+        return d
+        
     for vertex in range(graph.size):
         res = ''
         distance = d[vertex]
@@ -61,3 +72,32 @@ def dijkstra(graph, start: int = 0):
         res = str(start) + res
         print(distance, res)
     
+    
+def find_min(data,start,end):
+    min_len = None
+    
+    for s in start:
+        for e in end:
+            if (not (data[s][e] is None)) and (min_len is None or data[s][e] < min_len):
+                min_len = data[s][e]
+                min_ind = (s,e)
+
+    return min_ind
+
+def prim(graph):
+    tree = [0]
+    rest = list(range(1,graph.size))
+    
+    result = copy.deepcopy(graph.data)
+    for i in range(len(result)):
+        for j in range(len(result[i])):
+            result[i][j] = None
+        
+    while(len(tree) < graph.size):
+        i,j = find_min(graph.data,tree,rest)
+        result[i][j] = graph.data[i][j]
+        result[j][i] = graph.data[i][j]
+        rest.remove(j)
+        tree.append(j)
+        
+    return result
