@@ -54,7 +54,13 @@ if __name__ == "__main__":
     # G = generate_rand_graph(8, 0.23, (-5, 10))
     d, p = bellman_ford(G, 0)
     draw_graph(G, 'z3_bellmonto.png')
+    # print(d)
+    # print(p)
+    g2 = DiGraph(3).add_edge(0,1,-1).add_edge(1,0,4).add_edge(0,2,-4).add_edge(2,1,2)
+    d, p = bellman_ford(g2, 0)
     print(d)
     print(p)
+
+
 
 

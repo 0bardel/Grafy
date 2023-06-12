@@ -59,6 +59,12 @@ class DiGraph:
         self.out_deg.extend([0 for _ in range(n)])
         return self
 
+    def copy(self):
+        G = DiGraph(self.n)
+        for u, v, w in self.edges:
+            G.add_edge(u, v, w)
+        return G
+
     def __str__(self):
         return str(self.edges)
 
