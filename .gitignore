@@ -5,3 +5,4 @@ compose-dev.yaml
 .idea
 *.egg-info
 *.png
+/proj6/target
