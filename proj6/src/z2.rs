@@ -1,91 +1,106 @@
 use rand::prelude::*;
-use std::cmp::*;
 use std::fs::File;
 use std::io::prelude::*;
 
-pub const MAX_ITER: usize = 1000000;
-pub const TStart: f64 = 0.1;
+pub const MAX_ITER: usize = 100000;
+pub const TSTART: f64 = 0.001;
 
 pub type Point = (i32, i32);
 pub type Cycle = Vec<Point>;
 
-fn get_starting_cycle(V: &Cycle) -> Cycle {
+fn get_starting_cycle(points: &Cycle) -> Cycle {
     let mut rng = rand::thread_rng();
-    let mut P = vec![(0, 0); V.len() as usize];
+    let mut cycle = vec![(0, 0); points.len() as usize];
     let mut used = [false; 150];
     let mut i = 0;
     while i < 150 {
-        let j = rng.gen_range(0..(V.len() as usize));
+        let j = rng.gen_range(0..(points.len() as usize));
         if !used[j] {
-            P[i] = V[j];
+            cycle[i] = points[j];
             used[j] = true;
             i += 1;
         }
     }
-    P
+    cycle
 }
 
-fn change_edges(P: &Cycle) -> Cycle {
-    // let mut Pnew = P.clone();
+// fn change_points(cycle: &Cycle) -> Cycle {
+//     // let mut new_cycle = P.clone();
+//     let mut rng = rand::thread_rng();
+
+//     let i = rng.gen_range(0..(cycle.len() as usize - 1));
+//     let j = rng.gen_range(0..(cycle.len() as usize - 1));
+
+//     let a = min(i, j);
+//     let b = a + 1;
+//     let c = max(i, j);
+//     let d = c + 1;
+
+//     if a == c || a == d || b == c {
+//         return change_points(&cycle);
+//     }
+
+//     let mut new_cycle = vec![(0, 0); cycle.len() as usize];
+//     for k in 0..=a {
+//         new_cycle[k] = cycle[k];
+//     }
+//     for k in (b..=c).rev() {
+//         new_cycle[k] = cycle[k];
+//     }
+//     for k in d..(cycle.len() as usize) {
+//         new_cycle[k] = cycle[k];
+//     }
+//     new_cycle
+// }
+
+fn change_points(cycle: &Cycle) -> Cycle {
     let mut rng = rand::thread_rng();
 
-    let i = rng.gen_range(0..(P.len() as usize - 1));
-    let j = rng.gen_range(0..(P.len() as usize - 1));
+    let i = rng.gen_range(0..(cycle.len() as usize));
+    let j = rng.gen_range(0..(cycle.len() as usize));
 
-    let a = min(i, j);
-    let b = a + 1;
-    let c = max(i, j);
-    let d = c + 1;
-
-    if a == c || a == d || b == c {
-        return change_edges(&P);
+    if i == j {
+        return change_points(&cycle);
     }
 
-    let mut Pnew = vec![(0, 0); P.len() as usize];
-    for k in 0..=a {
-        Pnew[k] = P[k];
-    }
-    for k in (b..=c).rev() {
-        Pnew[k] = P[k];
-    }
-    for k in d..(P.len() as usize) {
-        Pnew[k] = P[k];
-    }
-    Pnew
+    let mut new_cycle = cycle.clone();
+    new_cycle.swap(i, j);
+    new_cycle as Cycle
 }
 
-fn get_cycle_length(P: &Cycle) -> f64 {
+fn get_cycle_length(cycle: &Cycle) -> f64 {
     let mut length = 0 as f64;
     for i in 0..149 {
-        let (x1, y1) = P[i];
-        let (x2, y2) = P[i + 1];
+        let (x1, y1) = cycle[i];
+        let (x2, y2) = cycle[i + 1];
         length += (((x1 - x2).pow(2) + (y1 - y2).pow(2)) as f64).sqrt();
     }
-    let (x1, y1) = P[149];
-    let (x2, y2) = P[0];
+    let (x1, y1) = cycle[149];
+    let (x2, y2) = cycle[0];
     length += (((x1 - x2).pow(2) + (y1 - y2).pow(2)) as f64).sqrt();
     length
 }
 
-pub fn simulated_annealing(V: Cycle) -> Cycle {
-    let mut P = get_starting_cycle(&V);
+pub fn simulated_annealing(points: Cycle) -> Cycle {
+    let mut cycle = get_starting_cycle(&points);
     for i in (1..=100).rev() {
-        let T = TStart * f64::powi(i as f64, 2);
+        let temperature = TSTART * f64::powi(i as f64, 2);
         for _ in 0..MAX_ITER {
-            let Pnew = change_edges(&P);
-            let delta = get_cycle_length(&Pnew) - get_cycle_length(&P);
+            let new_cycle = change_points(&cycle);
+            let delta = get_cycle_length(&new_cycle) - get_cycle_length(&cycle);
             if delta < 0. {
-                P = Pnew;
+                cycle = new_cycle;
             } else {
-                let p = (-delta as f64 / T).exp();
+                let p = (-delta as f64 / temperature).exp();
                 let r = rand::thread_rng().gen_range(0.0..1.0);
                 if r < p {
-                    P = Pnew;
+                    cycle = new_cycle;
                 }
             }
         }
     }
-    P
+    print!("{}\n", get_cycle_length(&cycle)); // 2059.178276644806
+    cycle
 }
 
 pub fn get_data() -> Cycle {
@@ -95,7 +110,7 @@ pub fn get_data() -> Cycle {
         .expect("Something went wrong reading the file");
     let mut lines = contents.lines();
     let mut data = Vec::new();
-    for i in 0..150 {
+    for _ in 0..150 {
         let line = lines.next().unwrap();
         let mut nums = line.split_whitespace();
         let x = nums.next().unwrap().parse::<i32>().unwrap();

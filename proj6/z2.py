@@ -17,7 +17,6 @@ with open('z2.txt') as f:
     lines = [line.split() for line in lines]
     lines = [[float(x) for x in line] for line in lines]
     lines = *zip(*lines),
-    print(lines)
     plt.figure()
     plt.plot(lines[0], lines[1])
     plt.show()
