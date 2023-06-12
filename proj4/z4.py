@@ -13,6 +13,8 @@ def dijkstra(G, s):
         u = min(Q, key=lambda x: d[x])
         Q.remove(u)
         for v, w in G.adj[u]:
+            if not v in Q:
+                continue
             if d[v] > d[u] + w:
                 d[v] = d[u] + w
                 p[v] = u
@@ -20,38 +22,57 @@ def dijkstra(G, s):
 
 
 def add_s(G):
-    G.add_vertex()
-    Gt = G.get_transpose()
+    Gt = G.get_copy()
+    Gt.add_vertex()
     for v in range(G.n):
-        Gt.add_edge(G.n-1, v, 0)
+        Gt.add_edge(Gt.n - 1, v, 0)
     return Gt
 
 
 # johnson algorithm
 def johnson(G):
     Gs = add_s(G)
-    bf = bellman_ford(Gs, G.n-1)
+    bf = bellman_ford(Gs, G.n - 1)
     if not bf:
         return None
     d, p = bf
     h = [i for i in d]
-    print(h)
     for i, (u, v, w) in enumerate(Gs.edges):
-        print(f"{i=} {u=} {v=} {w=}")
+        # print(f"{i=} {u=} {v=} {w=}")
         Gs.edges[i] = (u, v, w + h[u] - h[v])
 
+    G2 = Gs.get_copy()
+    print(G2)
     D = np.zeros((G.n, G.n))
     for u in range(G.n):
-        d2, _ = dijkstra(Gs.get_transpose(), u)
+        d2, _ = dijkstra(G2, u)
         for v in range(G.n):
-            D[u][v] = d2[v] + h[v] - h[u]
+            D[u][v] = d2[v] - h[u] + h[v]
     return D
 
 
 if __name__ == "__main__":
-    # johnson 
+    # johnson
     # G = coherentate(generate_rand_graph(4, 0.23, (-5, 10)))
-    G = DiGraph(7).add_edge(0,1,6).add_edge(1,0,10).add_edge(0,2,3).add_edge(0,4,-1).add_edge(1,4,4).add_edge(1,2,-5).add_edge(2,5,2).add_edge(5,1,9).add_edge(1,3,-4).add_edge(3,1,5).add_edge(1,6,4).add_edge(3,6,9).add_edge(4,6,-4).add_edge(6,5,4)
-    draw_graph(G, 'z4.png')
+    G = (
+        DiGraph(7)
+        .add_edge(0, 1, 6)
+        .add_edge(1, 0, 10)
+        .add_edge(0, 2, 3)
+        .add_edge(0, 4, -1)
+        .add_edge(1, 4, 4)
+        .add_edge(1, 2, -5)
+        .add_edge(2, 5, 2)
+        .add_edge(5, 1, 9)
+        .add_edge(1, 3, -4)
+        .add_edge(3, 1, 5)
+        .add_edge(1, 6, 4)
+        .add_edge(3, 6, 9)
+        .add_edge(4, 6, -4)
+        .add_edge(6, 5, 4)
+        .add_edge(2, 5, 2)
+    )
+    print(G)
+    draw_graph(G, "z4.png")
     D = johnson(G)
     print(D)

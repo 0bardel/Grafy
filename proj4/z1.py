@@ -26,11 +26,15 @@ class DiGraph:
         self.out_deg[u] += 1
         return self
 
-    def add_random_weighted_edge(self, u, v, min=1, max=10, can_Parallel=True, can_Self=True):
+    def add_random_weighted_edge(
+        self, u, v, min=1, max=10, can_Parallel=True, can_Self=True
+    ):
         w = random.randint(min, max)
         return self.add_edge(u, v, w, can_Parallel, can_Self)
 
-    def add_random_edge(self, weight_range=(1, 10), is_weighted=False, can_Self=True, can_Parallel=True):
+    def add_random_edge(
+        self, weight_range=(1, 10), is_weighted=False, can_Self=True, can_Parallel=True
+    ):
         u = random.randint(0, self.n - 1)
         v = random.randint(0, self.n - 1)
         w = random.randint(*weight_range)
@@ -38,7 +42,9 @@ class DiGraph:
         try:
             return self.add_edge(u, v, w if is_weighted else 1, can_Parallel, can_Self)
         except ValueError:
-            return self.add_random_edge(weight_range, is_weighted, can_Self, can_Parallel)
+            return self.add_random_edge(
+                weight_range, is_weighted, can_Self, can_Parallel
+            )
 
     def get_adj_matrix(self):
         matrix = [[0 for _ in range(self.n)] for _ in range(self.n)]
@@ -51,6 +57,17 @@ class DiGraph:
         for u, v, w in self.edges:
             Gt.add_edge(v, u, w)
         return Gt
+
+    def get_copy(self):
+        Gt = DiGraph(self.n)
+        for u, v, w in self.edges:
+            Gt.add_edge(u, v, w)
+        return Gt
+
+    def pop_vertex(self, n):
+        for i, u in enumerate(self.edges):
+            if u[0] == n or u[1] == n:
+                self.edges.pop(i)
 
     def add_vertex(self, n=1):
         self.n += n
@@ -89,11 +106,12 @@ def draw_graph(g, filename):
     pos = nx.circular_layout(G)
 
     # Draw the graph
-    nx.draw_networkx_edge_labels(G, pos, edge_labels={(
-        u, v): d['weight'] for u, v, d in G.edges(data=True)})
+    nx.draw_networkx_edge_labels(
+        G, pos, edge_labels={(u, v): d["weight"] for u, v, d in G.edges(data=True)}
+    )
     nx.draw_networkx_nodes(G, pos)
     nx.draw_networkx_labels(G, pos)
-    nx.draw_networkx_edges(G, pos, arrows=True, arrowstyle='->')
+    nx.draw_networkx_edges(G, pos, arrows=True, arrowstyle="->")
 
     # Show the plot
     plt.savefig(filename)
@@ -101,8 +119,15 @@ def draw_graph(g, filename):
 
 # crate main and test Graph
 if __name__ == "__main__":
-    g = DiGraph(5).add_random_edge(is_weighted=True).add_random_edge(is_weighted=True).add_random_edge(
-        is_weighted=True).add_random_edge(is_weighted=True).add_random_edge(is_weighted=True).add_random_edge(is_weighted=True)
+    g = (
+        DiGraph(5)
+        .add_random_edge(is_weighted=True)
+        .add_random_edge(is_weighted=True)
+        .add_random_edge(is_weighted=True)
+        .add_random_edge(is_weighted=True)
+        .add_random_edge(is_weighted=True)
+        .add_random_edge(is_weighted=True)
+    )
 
     print(g.edges)
     draw_graph(g, "graph.png")
