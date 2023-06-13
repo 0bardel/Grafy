@@ -1,5 +1,4 @@
 from proj4.z1 import DiGraph, draw_graph
-
 import random as rd
 import copy
 
@@ -28,7 +27,7 @@ def generate_flow_newtwork(N, verbose=False):
     for _ in range(2*N):
         # print(G.edges)
         G.add_random_edge(weight_range=(1, 10),
-                          is_weighted=True, can_Self=False)
+                          is_weighted=True, can_Self=False, can_Parallel=False)
     G.add_vertex()
     for v in shape[0]:
         G.add_random_weighted_edge(G.n-1, v, 1, 10)
@@ -39,5 +38,5 @@ def generate_flow_newtwork(N, verbose=False):
 
 
 if __name__ == '__main__':
-    G = generate_flow_newtwork(3, True)
+    G = generate_flow_newtwork(2, True)
     draw_graph(G, 'flow_network.png')
