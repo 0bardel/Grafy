@@ -76,6 +76,22 @@ class DiGraph:
         self.out_deg.extend([0 for _ in range(n)])
         return self
 
+    def get_edge_value(self, u, v):
+        for uu, vv, w in self.edges:
+            if uu == u and vv == v:
+                return w
+        return None
+
+    def add_edge_value(self, u, v, w):
+        for uu, vv, ww in self.edges:
+            if uu == u and vv == v:
+                self.edges.remove((u, v, ww))
+                self.adj[u].remove((v, ww))
+                self.edges.append((u, v, w+ww))
+                self.adj[u].append((v, w+ww))
+                return
+        self.add_edge(u, v, w)
+
     def __str__(self):
         return str(self.edges)
 
